@@ -37,7 +37,7 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'Home',     'url' => ['/site/index']],
-        ['label' => 'Threads',  'url' => ['/site/thread']]
+        ['label' => 'Threads',  'url' => ['/site/thread']] // WHAT ABOUT I18N?
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
@@ -63,7 +63,17 @@ AppAsset::register($this);
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
-        <?= Alert::widget() ?>
+        <? //= Alert::widget() // this doesn't print success alert flash,
+           //TODO: try a further investigate
+        ?>
+        <?php
+          $flashMessages = Yii::$app->session->getAllFlashes();
+          if ($flashMessages) {
+            foreach( $flashMessages as $key => $message) {
+              echo \yii\bootstrap\Alert::widget([ 'options' => [ 'class' => ($key == 'success' ? 'alert-info fade' : 'alert-danger fade'), ], 'body' => $message, ]);
+            }
+          }
+        ?>
         <?= $content ?>
     </div>
 </div>

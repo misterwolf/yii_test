@@ -152,9 +152,11 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
                 if (Yii::$app->getUser()->login($user)) {
+                    Yii::$app->session->setFlash('success', "Your account has successfully created");
                     return $this->goHome();
                 }
             }
+            Yii::$app->session->setFlash('error', "Your account hasn't created");
         }
 
         return $this->render('signup', [
