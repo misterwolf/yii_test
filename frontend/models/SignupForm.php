@@ -23,12 +23,10 @@ class SignupForm extends Model
         return [
             ['first_name', 'trim'],
             ['first_name', 'required'],
-            ['first_name', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This first_name has already been taken.'],
             ['first_name', 'string', 'min' => 2, 'max' => 255],
 
             ['last_name', 'trim'],
             ['last_name', 'required'],
-            ['last_name', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This last_name has already been taken.'],
             ['last_name', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'trim'],
