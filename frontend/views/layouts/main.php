@@ -37,7 +37,7 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'Home',     'url' => ['/site/index']],
-        ['label' => 'Threads',  'url' => ['/site/thread']] // WHAT ABOUT I18N?
+        ['label' => 'Threads',  'url' => ['/threads']]
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];

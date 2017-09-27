@@ -1,0 +1,27 @@
+/* ---------- ADDING BORDERS ----------- */
+.bordered {
+  border: 1px solid #fff;
+}
+
+.bordered-up-down{
+  border-top: 1px solid #eaeaea;
+  border-bottom: 1px solid #aeaeae;
+}
+
+.border-left-0{
+  border-left: 0;
+}
+
+border-right-0{
+  border-right: 0;
+}
+
+/* --------------------- */
+
+/* ---------- ADDING MARGIN ----------- */
+
+.margin-left-right{
+  margin-left: 1px;  margin-right: 1px;
+}
+
+/* --------------------- */
