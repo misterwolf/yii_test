@@ -59,13 +59,31 @@ class PostsController extends Controller
       $model = new Post();
       $model->thread_id = $thread_id;
 
-      if ($model->load(Yii::$app->request->post()) && $model->save()) {
+      if ( $model->load(Yii::$app->request->post() )) {
+
+        if ($model->validate() && $model->save()) {
+          return $this->redirect(['/threads/'.$thread_id]);
+        }
+
         return $this->redirect(['/threads/'.$thread_id]);
+
       }elseif (Yii::$app->request->isAjax) {
           return $this->renderAjax('_form', [
-                      'model' => $model
+            'model' => $model
           ]);
       }
+      // if ($model->load(Yii::$app->request->post()) && $model->save()) {
+      //     return $this->redirect(['/threads/'.$thread_id]);
+      // }elseif (Yii::$app->request->isAjax) {
+      //     return $this->renderAjax('_form', [
+      //       'model' => $model
+      //     ]);
+      // }
+      // if( $model->validate() ){
+      //
+      // }
+
+
         // $model = new Post();
         // $POST = Yii::$app->request->post();
         //

@@ -10,11 +10,11 @@ use yii\widgets\ActiveForm;
 
 <div class="posts-form">
 
-    <?php $form = ActiveForm::begin([ 'enableClientValidation' => true,
-                'options'                => [
-                    'id'      => 'dynamic-create'
-                 ]]);
-                ?>
+    <?php $form = ActiveForm::begin([ 'enableClientValidation' => true,    'enableClientValidation' => true,
+        'options'                => [
+            'id'      => 'dynamic-create'
+         ]]);
+      ?>
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>

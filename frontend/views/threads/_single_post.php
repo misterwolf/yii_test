@@ -43,7 +43,11 @@
             <div class="panel-footer">
               <div class="row">
                   <section class="col-md-2 ">
-                    <button type="button" class="btn btn-primary btn-xs" > Like this Post! </button>
+                    <?php if (!Yii::$app->user->isGuest) { ?>
+                    <button type="button" class="btn btn-primary btn-xs" >
+                        Like this post!
+                    </button>
+                  <?php } ?>
                   </section>
                   <section class="col-md-6 ">
                   </section>

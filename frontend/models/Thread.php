@@ -18,6 +18,7 @@ use app\models\Post;
 
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
+use app\components\Utility;
 
 /**
  * This is the model class for table "thread".
@@ -54,9 +55,20 @@ class Thread extends \yii\db\ActiveRecord
             [['title'], 'string', 'max' => 32],
             [['content'], 'string', 'max' => 100],
             [['title'], 'unique'],
-            [['title'], 'unique'],
             [['created_at'], 'unique'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::className(), 'targetAttribute' => ['created_by' => 'id']],
+            ['title', function ($attribute, $params, $validator) {
+                if (Utility::matchURLs($this->$attribute)){
+                  $this->addError($attribute, 'Sorry, urls are not allowed in the thread title');
+                }
+              }
+            ],
+            ['content', function ($attribute, $params, $validator) {
+                if (Utility::matchURLs($this->$attribute)){
+                  $this->addError($attribute, 'Sorry, urls are not allowed in the thread content');
+                }
+              }
+            ],
         ];
     }
 
@@ -116,4 +128,22 @@ class Thread extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'created_by']);
     }
+
+    //  this is another proposal for url check:
+    //  save the attribute though it contains an url, but hide url itself.
+    /**
+      * This will hide all the url existing in the content
+      * @param bool $insert
+      *
+      * @return bool
+      */
+    // public function beforeSave($insert)
+    // {
+    //
+    //   if (Utility::replaceURLs($this->title) || Utility::replaceURLs($this->content)){
+    //     throw new \yii\base\UserException( "Sorry, urls are not allowed!" );
+    //   }
+    //
+    //   return parent::beforeSave($insert);
+    // }
 }

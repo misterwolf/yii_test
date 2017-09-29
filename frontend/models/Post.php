@@ -8,6 +8,8 @@ use app\models\Thread;
 
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
+use app\components\Utility;
+
 /**
  * This is the model class for table "post".
  *
@@ -43,6 +45,14 @@ class Post extends \yii\db\ActiveRecord
             [['created_at'], 'unique'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(),   'targetAttribute' => ['created_by' => 'id']],
             [['thread_id'],  'exist', 'skipOnError' => true, 'targetClass' => Thread::className(), 'targetAttribute' => ['thread_id' => 'id']],
+            ['content', function ($attribute, $params, $validator) {
+                if (Utility::matchURLs($this->$attribute)){
+                  // show error in main page
+                  // TODO: show error in modal.
+                  Yii::$app->getSession()->setFlash('error', 'The post contains a URLs ');
+                }
+              }
+            ,'skipOnEmpty' => false],
         ];
     }
 
@@ -92,17 +102,4 @@ class Post extends \yii\db\ActiveRecord
         return $this->hasOne(Thread::className(), ['id' => 'thread_id']);
     }
 
-    // future purpose.
-    // /**
-    //   * @param bool $insert
-    //   *
-    //   * @return bool
-    //   */
-    //   public function beforeSave($insert)
-    //   {
-    //     // rule for hiddin links
-    //     $this->text = preg_replace('~((?:https?|ftps?)://.*?)( |$)~iu','[hidden-url]\2', $this->text);
-    //
-    //     return parent::beforeSave($insert);
-    //   }
 }
