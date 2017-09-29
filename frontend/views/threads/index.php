@@ -29,9 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <!-- COMMON -->
     <?php if ( !empty($threads)) { ?>
-
-      <?= $this->render('_single_thread', array('threads'=>$threads)); ?>
-
+      <?php foreach ($threads as $thread) {   ?>
+        <?= $this->render('_single_thread', array('thread'=>$thread)); ?>
+      <?php } ?>
     <?php } else { ?>
 
       <?= $this->render('_empty',array('message'=>'No threads have been created yet!')); ?>

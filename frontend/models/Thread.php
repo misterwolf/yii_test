@@ -14,6 +14,8 @@ namespace app\models;
 
 use Yii;
 use common\models\User;
+use app\models\Post;
+
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 
@@ -31,7 +33,7 @@ use yii\behaviors\BlameableBehavior;
  * @property Post[] $posts
  * @property User $author
  */
-class Threads extends \yii\db\ActiveRecord
+class Thread extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -91,9 +93,9 @@ class Threads extends \yii\db\ActiveRecord
     {
           return [
             TimestampBehavior::className(),
-            'blameable' => [ // let's try this new functinoality
+            'blameable' => [ // let's try this new functionality
                 'class' => BlameableBehavior::className(),
-                'createdByAttribute' => 'created_by', ## TODO: change in author_id
+                'createdByAttribute' => 'created_by', # TODO: change in author_id
                 'updatedByAttribute' => null,
             ]
         ];
@@ -102,7 +104,7 @@ class Threads extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPosts()
+    public function getPost()
     {
         return $this->hasMany(Post::className(), ['thread_id' => 'id']);
     }

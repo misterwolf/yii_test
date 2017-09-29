@@ -10,11 +10,11 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\helpers\Url;
 /**
- * ThreadsController implements the CRUD actions for Threads model.
+ * PostController implements the CRUD actions for Post model.
  */
-class ThreadsController extends Controller
+class PostsController extends Controller
 {
     /**
      * @inheritdoc
@@ -32,48 +32,56 @@ class ThreadsController extends Controller
     }
 
     /**
-     * Lists all Threads models.
+     * Lists all Post models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $threads = Thread::find()->with('author')->orderBy('created_at DESC')->all();
-        return $this->render('index', [
-            'threads' => $threads,
-        ]);
+      return Yii::$app->getResponse()->redirect(Url::to(['/threads/' ]));
     }
 
-    /**
-     * Displays a single Threads model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
+    public function actionView($post_id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id)
-        ]);
+      // Uhm, we can't do this by urlManager? let's study it
+      // TODO: a good idea is redirect to related thread with pagination!
+      $model = $this->findModel($post_id);
+      return Yii::$app->getResponse()->redirect(Url::to(['/threads/'.$model->thread_id ]));
+
     }
 
     /**
-     * Creates a new Threads model.
+     * Creates a new Post model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($thread_id)
     {
-        $model = new Thread();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect('index');
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+      $model = new Post();
+      $model->thread_id = $thread_id;
+
+      if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        return $this->redirect(['/threads/'.$thread_id]);
+      }elseif (Yii::$app->request->isAjax) {
+          return $this->renderAjax('_form', [
+                      'model' => $model
+          ]);
+      }
+        // $model = new Post();
+        // $POST = Yii::$app->request->post();
+        //
+        // $model->thread_id = $thread_id;
+        //
+        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        //     return $this->redirect(['threads/'.$thread_id]);
+        // } else {
+        //     return $this->render('create', [
+        //         'model' => $model,
+        //     ]);
+        // }
     }
 
     /**
-     * Updates an existing Threads model.
+     * Updates an existing Post model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -92,7 +100,7 @@ class ThreadsController extends Controller
     }
 
     /**
-     * Deletes an existing Threads model.
+     * Deletes an existing Post model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -105,15 +113,15 @@ class ThreadsController extends Controller
     }
 
     /**
-     * Finds the Threads model based on its primary key value.
+     * Finds the Post model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Threads the loaded model
+     * @return Post the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Thread::findOne($id)) !== null) {
+        if (($model = Post::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

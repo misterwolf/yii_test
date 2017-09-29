@@ -2,6 +2,8 @@
 namespace common\models;
 
 use Yii;
+use app\models\Post;
+use app\models\Thread;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -187,4 +189,21 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPosts()
+    {
+        return $this->hasMany(Post::className(), ['created_by' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getThreads()
+    {
+        return $this->hasMany(Thread::className(), ['created_by' => 'id']);
+    }
+
 }
