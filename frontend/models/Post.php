@@ -69,7 +69,8 @@ class Post extends \yii\db\ActiveRecord
           return [
             TimestampBehavior::className(),
             'blameable' => [ // let's try this new functionality
-                'class' => BlameableBehavior::className(),
+              // TODO: important: rollback on this and use normal id, Bleameable is more for Admins!
+              'class' => BlameableBehavior::className(),
                 'createdByAttribute' => 'created_by', # TODO: change in author_id
                 'updatedByAttribute' => null,         # TODO: in future we'll need to know who has modified.
             ]
@@ -92,6 +93,13 @@ class Post extends \yii\db\ActiveRecord
         return $this->hasOne(Thread::className(), ['id' => 'thread_id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVote()
+    {
+        return $this->hasMany(Vote::className(), ['post_id' => 'id']);
+    }
     // future purpose.
     // /**
     //   * @param bool $insert

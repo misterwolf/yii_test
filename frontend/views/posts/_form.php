@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
         <h4 class="modal-title">Add Comment</h4>
       </div>
       <div class="modal-body">
-        <?= $form->field($model, 'content')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'content')->textInput(['maxlength'=>100,'style'=>'height:100px']) ?>
       </div>
       <div class="modal-footer">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
