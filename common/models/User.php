@@ -3,6 +3,7 @@ namespace common\models;
 
 use Yii;
 use app\models\Post;
+use app\models\Vote;
 use app\models\Thread;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -206,4 +207,11 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasMany(Thread::className(), ['created_by' => 'id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVotes()
+    {
+        return $this->hasMany(Vote::className(), ['user_id' => 'id']);
+    }
 }

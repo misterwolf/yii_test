@@ -8,7 +8,10 @@
   // it's sure that in future the things'll change :)
   // $forPost = $forPost ?: false;
 
-  $summaryVersion = $summaryVersion ?? false;
+  $summaryVersion     = $summaryVersion ?? false;
+  $voteForThisThread  = $thread->getVote()->count();
+  $postsForThisThread = $thread->getPost()->count();
+  $currentUserVotes   = $thread->getVote()->andOnCondition(['thread_id' => $thread->id, 'user_id' => Yii::$app->user->identity->id])->one();
 
 ?>
 
@@ -16,7 +19,7 @@
     <section class="row clearfix">
       <div class="row clearfix">
         <div class="col-md-12 column">
-          <div class="panel panel-default">
+          <div class="panel panel-default <?= $summaryVersion ? "summary" : ""?> ">
 
             <?php if (!$summaryVersion) { ?>
               <div class="panel-heading">
@@ -26,7 +29,7 @@
             <?php }?>
 
             <section class="row panel-body">
-              <section class="col-md-9">
+              <section class="col-md-9 ">
 
                 <?php if (!$summaryVersion) { ?>
                   <h2><?= $thread->title ?></h2>
@@ -50,8 +53,8 @@
 
                     <dl>
                       <dd> Joined at: <?= Yii::$app->formatter->asDate($thread->author->created_at, 'yyyy-MM-dd'); ?> </dd>
-                      <dd> Posts:  <?= $thread->author->getPosts()->count() ?> </dd>
-                      <dd> Likes: </dd>
+                      <dd> Posts:     <?= $thread->author->getPosts()->count() ?> </dd>
+                      <dd> Likes:     <?= $thread->author->getVotes()->count() ?></dd>
                     </dl>
 
                   </section>
@@ -60,14 +63,23 @@
             </section>
             <div class="panel-footer">
               <div class="row">
-                <section class="col-md-2 ">
-                  <?php if (!Yii::$app->user->isGuest) { ?>
-                    <button type="button" class="btn btn-primary btn-xs" >
-                        Like this thread!
-                    </button>
-                  <?php } ?>
+                <section class="col-md-3 ">
+                  <?php
+                  $statusUp   = '';
+                  $statusDown = '';
+
+                   if ($currentUserVotes) {
+                     if ($currentUserVotes->up) $statusUp = 'not-active';
+                     if ($currentUserVotes->down) $statusDown   = 'not-active';
+                   } ?>
+                   <dl>
+                     <dd> Votes: <?= $voteForThisThread; // TODO: increment this after voting ?></dd>
+                     <dd> Posts: <?= $postsForThisThread; // TODO: increment this after voting ?></dd>
+                   </dl>
+                  <a href="<?= Url::to(['threads/'.$thread->id.'/votes/up']); ?>" class="btn btn-primary btn-xs vote <?= $statusUp ?>"> Like this thread! </a>
+                  <a href="<?= Url::to(['threads/'.$thread->id.'/votes/down']); ?>" class="btn btn-danger btn-xs vote <?= $statusDown ?>"> Dislike this thread!</a>
                 </section>
-                <section class="col-md-6 ">
+                <section class="col-md-5 ">
                 </section>
                 <section class="col-md-4 text-right">
                   <?php if (!$summaryVersion) { ?>

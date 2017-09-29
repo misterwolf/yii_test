@@ -95,6 +95,29 @@ AppAsset::register($this);
   echo "<div id='modalContent'></div>";
   yii\bootstrap\Modal::end();
 ?>
+<?php
+$script = <<< JS
+
+  $('.vote').on('click', function(event){
+    var buttons = $(this).parent().children();
+    event.preventDefault();
+    $.ajax({
+        url : $(this).attr('href'),
+        type: 'POST',
+        cache : false,
+        context:this,
+        success : function( data ){
+          buttons.removeClass('not-active');
+          $(this).addClass('not-active');
+          alert(data); // TODO: activate a modal
+        }
+    });
+
+  });
+
+JS;
+$this->registerJs($script);
+?>
 <?php $this->endBody() ?>
 </body>
 </html>

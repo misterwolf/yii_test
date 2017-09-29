@@ -56,6 +56,7 @@ class Thread extends \yii\db\ActiveRecord
             [['content'], 'string', 'max' => 100],
             [['title'], 'unique'],
             [['created_at'], 'unique'],
+            # TODO: rollback on this and use normal fk_id: it purpose is about Administrations
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::className(), 'targetAttribute' => ['created_by' => 'id']],
             ['title', function ($attribute, $params, $validator) {
                 if (Utility::matchURLs($this->$attribute)){
@@ -103,13 +104,13 @@ class Thread extends \yii\db\ActiveRecord
      */
     public function behaviors()
     {
-          return [
-            TimestampBehavior::className(),
-            'blameable' => [ // let's try this new functionality
-                'class' => BlameableBehavior::className(),
-                'createdByAttribute' => 'created_by', # TODO: change in author_id
-                'updatedByAttribute' => null,
-            ]
+        return [
+          TimestampBehavior::className(),
+          'blameable' => [ // let's try this new functionality - TODO: important: rollback on this, Bleameable is more for Admins!
+              'class' => BlameableBehavior::className(),
+              'createdByAttribute' => 'created_by', # TODO: change in author_id
+              'updatedByAttribute' => null,
+          ]
         ];
     }
 
@@ -121,6 +122,13 @@ class Thread extends \yii\db\ActiveRecord
         return $this->hasMany(Post::className(), ['thread_id' => 'id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVote()
+    {
+        return $this->hasMany(Vote::className(), ['thread_id' => 'id']);
+    }
     /**
      * @return \yii\db\ActiveQuery
      */

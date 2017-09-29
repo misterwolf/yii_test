@@ -25,8 +25,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // TODO: change this=> $model->posts when you'll need Dynmical Query ?>
     <?php if ( !empty( $model->getPost() ) ) { ?>
 
-      <?= $this->render('_single_post', array('posts'=> $model->post )) ?>
-
+      <?php foreach ($model->post as $post) { ?>
+        <?= $this->render('_single_post', array('post'=> $post )) ?>
+      <?php } ?>
     <?php } else { ?>
 
       <?= $this->render('_empty',array('message'=>'No posts have been created for this thread yet!')); ?>
