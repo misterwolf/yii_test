@@ -49,7 +49,7 @@ class Post extends \yii\db\ActiveRecord
                 if (Utility::matchURLs($this->$attribute)){
                   // show error in main page
                   // TODO: show error in modal.
-                  Yii::$app->getSession()->setFlash('error', 'The post contains a URLs ');
+                  $this->addError($attribute, 'Sorry, urls are not allowed in the post');
                 }
               }
             ,'skipOnEmpty' => false],

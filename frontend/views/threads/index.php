@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
          if (Yii::$app->user->isGuest) {
           $disabled = 'disabled';
         } ?>
-        <?= Html::a('Create Threads', ['create'], ['class' => 'btn btn-success '.$disabled]) ?>
+        <?= Html::a('Create a thread', ['create'], ['class' => 'btn btn-success '.$disabled]) ?>
       </section>
     </div>
     <hr>
@@ -37,6 +37,14 @@ $this->params['breadcrumbs'][] = $this->title;
       <?= $this->render('_empty',array('message'=>'No threads have been created yet!')); ?>
 
     <?php } ?>
+
+
+    <?php
+    $disabled = '';
+     if (Yii::$app->user->isGuest) {
+      $disabled = 'disabled';
+    } ?>
+    <?= Html::a('Create a thread', ['create'], ['class' => 'btn btn-success '.$disabled]) ?>
     <!-- !COMMON -->
 
 </div>

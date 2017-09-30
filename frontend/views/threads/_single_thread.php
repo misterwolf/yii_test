@@ -1,4 +1,3 @@
-<!-- second proposal -->
 <?php
 
   use yii\helpers\Url;
@@ -15,83 +14,77 @@
 
 ?>
 
-  <section class="container">
-    <section class="row clearfix">
-      <div class="row clearfix">
-        <div class="col-md-12 column">
-          <div class="panel panel-default <?= $summaryVersion ? "summary" : ""?> ">
-
-            <?php if (!$summaryVersion) { ?>
-              <div class="panel-heading">
-                <section class="panel-title"> Thread Numer #
-                </section>
-              </div>
-            <?php }?>
-
-            <section class="row panel-body">
-              <section class="col-md-9 ">
-
-                <?php if (!$summaryVersion) { ?>
-                  <h2><?= $thread->title ?></h2>
-                  <hr>
-                <?php }?>
-
-                <p>
-                  <?= $thread->content ?>
-                </p>
-              </section>
-
-              <section id="user-description" class="col-md-3 ">
-                  <section class="well">
-                    <dl>
-                      <dd> Created by </dd>
-                      <dd> <?= $thread->author->first_name." ".$thread->author->last_name ?> </dd>
-                    </dl>
-                    <figure>
-                      <!-- PICTURE PROFILE-->
-                    </figure>
-
-                    <dl>
-                      <dd> Joined at: <?= Yii::$app->formatter->asDate($thread->author->created_at, 'yyyy-MM-dd'); ?> </dd>
-                      <dd> Posts:     <?= $thread->author->getPosts()->count() ?> </dd>
-                      <dd> Likes:     <?= $thread->author->getVotes()->count() ?></dd>
-                    </dl>
-
-                  </section>
-              </section>
-
+<section class="row clearfix">
+    <div class="col-md-12 column">
+      <section class="panel panel-default <?= $summaryVersion ? "summary" : ""?> ">
+        <section class="panel-heading clearfix">
+          <section class="panel-title">
+            <section class="col-md-9 column">
+              <h2><?= $thread->title ?></h2>
             </section>
-            <div class="panel-footer">
-              <div class="row">
-                <section class="col-md-3 ">
-                  <?php
-                  $statusUp   = '';
-                  $statusDown = '';
+            <section class="col-md-3 column text-right">
+              <dl>
+                <dd> Posted at: <h5><?= Yii::$app->formatter->asDate($thread->created_at, 'yyyy-MM-dd hh:mm:ss'); ?></h5></dd>
+              </dl>
+            </section>
+          </section>
+        </section>
 
-                   if ($currentUserVotes) {
-                     if ($currentUserVotes->up) $statusUp = 'not-active';
-                     if ($currentUserVotes->down) $statusDown   = 'not-active';
-                   } ?>
-                   <dl>
-                     <dd> Votes: <?= $voteForThisThread; // TODO: increment this after voting ?></dd>
-                     <dd> Posts: <?= $postsForThisThread; // TODO: increment this after voting ?></dd>
-                   </dl>
-                  <a href="<?= Url::to(['threads/'.$thread->id.'/votes/up']); ?>" class="btn btn-primary btn-xs vote <?= $statusUp ?>"> Like this thread! </a>
-                  <a href="<?= Url::to(['threads/'.$thread->id.'/votes/down']); ?>" class="btn btn-danger btn-xs vote <?= $statusDown ?>"> Dislike this thread!</a>
-                </section>
-                <section class="col-md-5 ">
-                </section>
-                <section class="col-md-4 text-right">
-                  <?php if (!$summaryVersion) { ?>
-                    <a href="<?= Url::to(['threads/view', 'id' => $thread->id]); ?>" class="btn btn-primary btn-xs">View</a>
-                  <?php }?>
-                </section>
-              </div>
-            </div>
+        <section class="panel-body">
+          <section class="col-md-9 ">
+            <h3>
+              <?= $thread->content ?>
+            </h3>
+          </section>
+
+          <section id="user-description" class="col-md-3 ">
+              <section class="well">
+                <dl>
+                  <dd> Created by </dd>
+                  <dd><h5> <?= $thread->author->first_name." ".$thread->author->last_name ?> </h5></dd>
+                </dl>
+                <figure>
+                  <!-- PICTURE PROFILE-->
+                </figure>
+
+                <dl>
+                  <dd> Joined at: <?= Yii::$app->formatter->asDate($thread->author->created_at, 'yyyy-MM-dd'); ?> </dd>
+                  <dd> Posts:     <?= $thread->author->getPosts()->count() ?> </dd>
+                  <dd> Likes:     <?= $thread->author->getVotes()->count() ?> </dd>
+                </dl>
+
+              </section>
+          </section>
+
+        </section>
+        <section class="panel-footer">
+          <div class="row">
+            <section class="col-md-5 ">
+              <?php
+
+              $statusUp   = '';
+              $statusDown = '';
+               if ($currentUserVotes) {
+                 if ($currentUserVotes->up) $statusUp = 'not-active';
+                 if ($currentUserVotes->down) $statusDown   = 'not-active';
+               }
+               ?>
+              <a href="<?= Url::to(['threads/'.$thread->id.'/votes/up']); ?>" class="btn btn-primary btn-md vote-thread <?= $statusUp ?>"> Like this thread! </a>
+              <a href="<?= Url::to(['threads/'.$thread->id.'/votes/down']); ?>" class="btn btn-danger btn-md vote-thread <?= $statusDown ?>"> Dislike this thread!</a>
+            </section>
+            <section class="col-md-2 ">
+              <h5>Posts: <?= $postsForThisThread; // TODO: increment this after voting ?></h5>
+            </section>
+            <section class="col-md-2 ">
+              <h5>Votes: <?= $voteForThisThread; // TODO: increment this after voting ?></h5>
+            </section>
+            <section class="col-md-3 text-right">
+              <?php if (!$summaryVersion) { ?>
+                <a href="<?= Url::to(['threads/view', 'id' => $thread->id]); ?>" class="btn btn-primary btn-md">View</a>
+              <?php }?>
+            </section>
           </div>
-        </div>
-      </div>
-    </section>
-  </section>
-
-<!-- !second proposal -->
+        </section>
+      </section>
+    </div>
+</section>

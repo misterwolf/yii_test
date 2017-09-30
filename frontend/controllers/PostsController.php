@@ -9,6 +9,8 @@ use common\models\User;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 /**
@@ -59,43 +61,24 @@ class PostsController extends Controller
       $model = new Post();
       $model->thread_id = $thread_id;
 
-      if ( $model->load(Yii::$app->request->post() )) {
-
-        if ($model->validate() && $model->save()) {
-          return $this->redirect(['/threads/'.$thread_id]);
-        }
-
-        return $this->redirect(['/threads/'.$thread_id]);
-
-      }elseif (Yii::$app->request->isAjax) {
-          return $this->renderAjax('_form', [
-            'model' => $model
-          ]);
+      if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+        Yii::$app->response->format =  yii\web\Response::FORMAT_JSON;
+        return ActiveForm::validate($model);
+      } else {
+          // in the post ( 'ensembleStaff_ids' => [0 => '2']); where the id actually is staff_id
+          if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['/threads/'.$thread_id]);
+          } else {
+            if (Yii::$app->request->isAjax){
+              return $this->renderAjax('_form', [
+                  'model' => $model,
+              ]);
+            } else{
+              return $this->redirect(['/threads/'.$thread_id]); // prevent direct opening of url
+            }
+          }
       }
-      // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-      //     return $this->redirect(['/threads/'.$thread_id]);
-      // }elseif (Yii::$app->request->isAjax) {
-      //     return $this->renderAjax('_form', [
-      //       'model' => $model
-      //     ]);
-      // }
-      // if( $model->validate() ){
-      //
-      // }
-
-
-        // $model = new Post();
-        // $POST = Yii::$app->request->post();
-        //
-        // $model->thread_id = $thread_id;
-        //
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        //     return $this->redirect(['threads/'.$thread_id]);
-        // } else {
-        //     return $this->render('create', [
-        //         'model' => $model,
-        //     ]);
-        // }
+      return $this->redirect(['/threads/'.$thread_id]); // prevent direct opening of url
     }
 
     /**

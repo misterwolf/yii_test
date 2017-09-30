@@ -98,7 +98,34 @@ AppAsset::register($this);
 <?php
 $script = <<< JS
 
-  $('.vote').on('click', function(event){
+  $('.vote-thread').on('click', function(event){
+    var buttons = $(this).parent().children();
+    event.preventDefault();
+    $.ajax({
+        url : $(this).attr('href'),
+        type: 'POST',
+        cache : false,
+        context:this,
+        success : function( data ){
+          console.log(data);
+          if (!data.error){
+            buttons.removeClass('not-active');
+            $(this).addClass('not-active');
+          }
+          alert(data.message); // TODO: activate a modal
+        }
+    });
+
+  });
+
+JS;
+$this->registerJs($script);
+?>
+
+<?php
+$script = <<< JS
+
+  $('.vote-post').on('click', function(event){
     var buttons = $(this).parent().children();
     event.preventDefault();
     $.ajax({

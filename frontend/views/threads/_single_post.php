@@ -12,67 +12,69 @@
 
 ?>
 
-  <section class="container">
-    <section class="row clearfix">
-        <div class="col-md-12 column">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <section class="panel-title"></section>
-            </div>
-            <section class="row panel-body">
-              <section class="col-md-9">
-                <p>
-                  <?= $post->content ?>
-                </p>
-              </section>
+<section class="row">
+  <div class="col-md-2 column"></div>
+  <div class="col-md-8 ">
+    <div class="panel panel-default">
+      <section class="panel-heading clearfix">
+        <div class="row">
+          <section class="col-md-4 ">
+            <p id="post-votes-<?= $post->id ?>"> Votes: <?= $voteForThisPost; // TODO: increment this after voting ?></p>
+          </section>
+          <section class="col-md-8 text-right">
+              <p>Posted at: <strong><?= Yii::$app->formatter->asDate($post->created_at, 'yyyy-MM-dd hh:mm:ss'); ?></strong></p>
+          </section>
+        </div>
+      </section>
+      <section class="row panel-body">
+        <section class="col-md-7">
+          <h3>
+            <?= $post->content ?>
+          </h3>
+        </section>
 
-              <section id="user-description" class="col-md-3 ">
-                  <section class="well">
-                    <dl>
-                      <dd> Posted by </dd>
-                      <dd> <?= $post->author->first_name." ".$post->author->last_name ?> </dd>
-                    </dl>
-                    <figure>
-                      <!-- PICTURE PROFILE-->
-                    </figure>
+        <section id="user-description" class="col-md-5 ">
+            <section class="well">
+              <dl>
+                <dd> Posted by </dd>
+                <dd> <h5><?= $post->author->first_name." ".$post->author->last_name ?></h5> </dd>
+              </dl>
+              <figure>
+                <!-- PICTURE PROFILE-->
+              </figure>
 
-                    <dl>
-                      <dd> Joined at: <?= Yii::$app->formatter->asDate($post->author->created_at, 'yyyy-MM-dd'); ?> </dd>
-                      <dd> Posts:     <?= $post->author->getPosts()->count() ?> </dd>
-                      <dd> Likes:     <?= $post->author->getVotes()->count() ?></dd>
-                    </dl>
-
-                  </section>
-              </section>
+              <dl>
+                <dd> Joined at: <?= Yii::$app->formatter->asDate($post->author->created_at, 'yyyy-MM-dd'); ?> </dd>
+                <dd> Posts:     <?= $post->author->getPosts()->count() ?> </dd>
+                <dd> Likes:     <?= $post->author->getVotes()->count() ?></dd>
+              </dl>
 
             </section>
-            <div class="panel-footer">
-              <div class="row">
-                <section class="col-md-3 ">
-                  <?php
-                  $statusUp   = '';
-                  $statusDown = '';
-                   if ($currentUserVote) {
-                     if ($currentUserVote->up) $statusUp = 'not-active';
-                     if ($currentUserVote->down) $statusDown   = 'not-active';
-                   } ?>
-                   <dl>
-                     <dd id="post-votes-<?= $post->id ?>"> Votes: <?= $voteForThisPost; // TODO: increment this after voting ?></dd>
-                     <dd> Replies: TODO</dd>
-                   </dl>
-                  <a href="<?= Url::to(['threads/'.$thread_id.'/posts/'.$post->id.'/votes/up']); ?>" class="btn btn-primary btn-xs vote <?= $statusUp ?>"> Like this post! </a>
-                  <a href="<?= Url::to(['threads/'.$thread_id.'/posts/'.$post->id.'/votes/down']); ?>" class="btn btn-danger btn-xs vote <?= $statusDown ?>"> Dislike this post!</a>
-                </section>
-                <section class="col-md-5 ">
-                </section>
-                <section class="col-md-4 text-right">
-                </section>
-              </div>
-            </div>
-          </div>
+        </section>
+
+      </section>
+      <div class="panel-footer">
+        <div class="row">
+          <section class="col-md-8 ">
+            <?php
+            $statusUp   = '';
+            $statusDown = '';
+             if ($currentUserVote) {
+               if ($currentUserVote->up) $statusUp = 'not-active';
+               if ($currentUserVote->down) $statusDown   = 'not-active';
+             } ?>
+
+            <a href="<?= Url::to(['threads/'.$thread_id.'/posts/'.$post->id.'/votes/up']); ?>" class="btn btn-primary btn-xs vote-post <?= $statusUp ?>"> Like this post! </a>
+            <a href="<?= Url::to(['threads/'.$thread_id.'/posts/'.$post->id.'/votes/down']); ?>" class="btn btn-danger btn-xs vote-post <?= $statusDown ?>"> Dislike this post!</a>
+          </section>
+          <section class="col-md-4 text-right ">
+            <a href="<?= Url::to(['#']); ?>" class="btn btn-primary btn-xs vote not-active <?= $statusUp ?>"> Reply (TODO) </a>
+          </section>
         </div>
       </div>
-    </section>
-  </section>
+    </div>
+  </div>
+  <div class="col-md-2"></div>
+</section>
 
 <!-- !second proposal -->

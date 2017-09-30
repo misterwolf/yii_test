@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 <div class="posts-form">
 
-    <?php $form = ActiveForm::begin([ 'enableClientValidation' => true,    'enableClientValidation' => true,
+    <?php $form = ActiveForm::begin([ 'enableClientValidation' => true,    'enableAjaxValidation' => true,
         'options'                => [
             'id'      => 'dynamic-create'
          ]]);
