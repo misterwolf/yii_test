@@ -107,9 +107,12 @@ $script = <<< JS
         cache : false,
         context:this,
         success : function( data ){
-          buttons.removeClass('not-active');
-          $(this).addClass('not-active');
-          alert(data); // TODO: activate a modal
+          console.log(data);
+          if (!data.error){
+            buttons.removeClass('not-active');
+            $(this).addClass('not-active');
+          }
+          alert(data.message); // TODO: activate a modal
         }
     });
 

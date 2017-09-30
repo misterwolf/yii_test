@@ -6,12 +6,12 @@
 
   // better separate the rendering of thread and post in two different partials:
   // it's sure that in future the things'll change :)
-  // $forPost = $forPost ?: false;
 
   $summaryVersion     = $summaryVersion ?? false;
+  $currentUserId      = Yii::$app->user->isGuest ? null : Yii::$app->user->identity->id;
   $voteForThisThread  = $thread->getVote()->count();
   $postsForThisThread = $thread->getPost()->count();
-  $currentUserVotes   = $thread->getVote()->andOnCondition(['thread_id' => $thread->id, 'user_id' => Yii::$app->user->identity->id])->one();
+  $currentUserVotes   = $thread->getVote()->andOnCondition(['thread_id' => $thread->id, 'user_id' => $currentUserId])->one();
 
 ?>
 

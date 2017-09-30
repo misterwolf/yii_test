@@ -12,6 +12,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
+use yii\web\Response;
+
 /*
   TODO: REFACTOR CODE FOR UP AND DOWN ACTIONS.
  */
@@ -32,6 +34,15 @@ class VotesController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            [
+            'class' => 'yii\filters\ContentNegotiator',
+            'only' => ['actionUp', 'actionDown'],  // in a controller
+            // if in a module, use the following IDs for user actions
+            // 'only' => ['user/view', 'user/index']
+            'formats' => [
+                'application/json' => Response::FORMAT_JSON,
+            ],
+        ],
         ];
     }
 
@@ -42,35 +53,39 @@ class VotesController extends Controller
      */
     public function actionUp($thread_id = null, $post_id = null)
     {
-
-        if (!$thread_id && !$post_id || !Yii::$app->user->identity->id){
-          return false; // no way to vote!
+        // ---- no way to vote!
+        if (!$thread_id && !$post_id){
+          $result = ["error" => true, "message" => "Ops! Something went wrong. Try again later!"];
         }
 
-        $changedMindText = "It's always a good thing to change mind!";
-        $model = Vote::find()
-                 ->where(['thread_id' => $thread_id, 'post_id'=>$post_id, 'user_id' => Yii::$app->user->identity->id])
-                 ->one();
+        if (Yii::$app->user->isGuest){
+          $result = ["error" => true, "message" => "You must be logged to vote!"];
+        }  else {
+          // ------
+          $changedMindText = "It's always a good thing to change mind!";
+          $model = Vote::find()
+                   ->where(['thread_id' => $thread_id, 'post_id'=>$post_id, 'user_id' => Yii::$app->user->identity->id])
+                   ->one();
 
-        if(!$model){ // new istance.
-          $changedMindText  = '';
-          $model            = new Vote();
-          $model->user_id   = Yii::$app->user->identity->id;
-          $model->thread_id = $thread_id;
-          $model->post_id   = $post_id;
+          if(!$model){ // new istance.
+            $changedMindText  = '';
+            $model            = new Vote();
+            $model->user_id   = Yii::$app->user->identity->id;
+            $model->thread_id = $thread_id;
+            $model->post_id   = $post_id;
+          }
+
+          $model->up = 1;
+          $model->down = 0;
+
+          if ($model->save()) {
+            $result = ["error" => false, "message" => "Thanks for voting! ".$changedMindText];
+          } else {
+            $result = ["error" => true, "message" => "Ops! Something went wrong. Try again later!"];
+          }
         }
-
-        $model->up = 1;
-        $model->down = 0;
-
-        if ($model->save()) {
-          $test = "Thanks for voting! ".$changedMindText;
-        } else {
-          $test = "Ops! Something went wrong. Try again later!";
-        }
-
-        // return Json
-        return \yii\helpers\Json::encode($test);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        return $result;
     }
 
     /**
@@ -81,37 +96,41 @@ class VotesController extends Controller
      */
     public function actionDown($thread_id = null, $post_id = null )
     {
-      if (!$thread_id && !$post_id || !Yii::$app->user->identity->id){
-        return false; // no way to vote!
-      }
 
-      $changedMindText = "It's always a good thing to change mind!";
+          // ---- no way to vote!
+          if (!$thread_id && !$post_id){
+            $result = ["error" => true, "message" => "Ops! Something went wrong. Try again later!"];
+          }
 
-      // I think, this way we can prevent a lot of checks for to prevent multiple votes by a single user.
-      $model = Vote::find()
-               ->where(['thread_id' => $thread_id, 'post_id'=>$post_id, 'user_id' => Yii::$app->user->identity->id])
-               ->one();
+          if (Yii::$app->user->isGuest){
+            $result = ["error" => true, "message" => "You must be logged to vote!"];
+          }  else {
+            // ------
 
-      if(!$model){ // new istance.
-        $changedMindText  = '';
-        $model            = new Vote();
-        $model->user_id   = Yii::$app->user->identity->id;
-        $model->thread_id = $thread_id;
-        $model->post_id   = $post_id;
-      }
+            $changedMindText = "It's always a good thing to change mind!";
+            $model = Vote::find()
+                     ->where(['thread_id' => $thread_id, 'post_id'=>$post_id, 'user_id' => Yii::$app->user->identity->id])
+                     ->one();
 
-      $model->up = 0;
-      $model->down = 1;
+            if(!$model){ // new istance.
+              $changedMindText  = '';
+              $model            = new Vote();
+              $model->user_id   = Yii::$app->user->identity->id;
+              $model->thread_id = $thread_id;
+              $model->post_id   = $post_id;
+            }
 
-      // further information concerning the success and fail of request will be added in more complete project!
-      if ($model->save()) {
-        $test = "Thanks for voting! ".$changedMindText;
-      } else {
-        $test = "Ops! Something went wrong. Try again later!";
-      }
+            $model->up = 1;
+            $model->down = 0;
 
-      // return Json
-      return \yii\helpers\Json::encode($test);
+            if ($model->save()) {
+              $result = ["error" => false, "message" => "Thanks for voting! ".$changedMindText];
+            } else {
+              $result = ["error" => true, "message" => "Ops! Something went wrong. Try again later!"];
+            }
+          }
+          \Yii::$app->response->format = Response::FORMAT_JSON; // ?
+          return $result;
     }
 
 }

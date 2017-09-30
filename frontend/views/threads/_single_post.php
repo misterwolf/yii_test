@@ -4,17 +4,16 @@
   use yii\helpers\Url;
   use yii\helpers\Html;
 
+  $currentUserId = Yii::$app->user->isGuest ? null : Yii::$app->user->identity->id;
   $thread_id = $post->thread_id;
-
   $voteForThisPost  = $post->getVote()->count();
   $postsForThisPost = $post->getThread()->one()->getPost()->count();
-  $currentUserVote  = $post->getVote()->andOnCondition(['thread_id' => $thread_id, 'post_id' => $post->id, 'user_id' => Yii::$app->user->identity->id])->one();
+  $currentUserVote  = $post->getVote()->andOnCondition(['thread_id' => $thread_id, 'post_id' => $post->id, 'user_id' => $currentUserId])->one();
 
 ?>
-<?php foreach ($posts as $post) { ?>
+
   <section class="container">
     <section class="row clearfix">
-      <div class="row clearfix">
         <div class="col-md-12 column">
           <div class="panel panel-default">
             <div class="panel-heading">
