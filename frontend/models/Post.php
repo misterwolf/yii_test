@@ -25,6 +25,8 @@ use app\components\Utility;
  */
 class Post extends \yii\db\ActiveRecord
 {
+    public $testQuestion;
+
     /**
      * @inheritdoc
      */
@@ -39,7 +41,7 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['content', 'thread_id'], 'required'],
+            [['content', 'thread_id', 'testQuestion'], 'required'],
             [['thread_id', 'created_by', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'string', 'max' => 100],
             [['created_at'], 'unique'],
@@ -51,8 +53,13 @@ class Post extends \yii\db\ActiveRecord
                   // TODO: show error in modal.
                   $this->addError($attribute, 'Sorry, urls are not allowed in the post');
                 }
+              }],
+            ['testQuestion', function ($attribute, $params, $validator) {
+                if ("two" !== $this->$attribute){
+                  $this->addError($attribute, 'The text of the nice question is not right!');
+                }
               }
-            ,'skipOnEmpty' => false],
+            ],
         ];
     }
 
@@ -64,6 +71,7 @@ class Post extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'content' => 'Content',
+            'testQuestion' => "Humans have * legs (literal)",
             'thread_id' => 'Thread ID',
             'created_by' => 'Created By',
             'created_at' => 'Created At',

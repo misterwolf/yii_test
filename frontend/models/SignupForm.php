@@ -3,6 +3,7 @@ namespace frontend\models;
 
 use yii\base\Model;
 use common\models\User;
+use yii\captcha\Captcha;
 
 /**
  * Signup form
@@ -13,7 +14,7 @@ class SignupForm extends Model
     public $last_name;
     public $email;
     public $password;
-
+    public $verifyCode; // used for captcha in form creation
 
     /**
      * @inheritdoc
@@ -37,6 +38,8 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+            ['verifyCode', 'captcha', 'captchaAction' => 'site/captcha'],
+
         ];
     }
 
@@ -58,6 +61,6 @@ class SignupForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
 
-        return $user->save() ? $user : null;
+        return $user->save(false) ? $user : null; // verifycode captcha can change
     }
 }

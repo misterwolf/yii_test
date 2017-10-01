@@ -36,6 +36,7 @@ use app\components\Utility;
  */
 class Thread extends \yii\db\ActiveRecord
 {
+    public $testQuestion;
     /**
      * @inheritdoc
      */
@@ -50,7 +51,7 @@ class Thread extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'content'], 'required'],
+            [['title', 'content', 'testQuestion'], 'required'],
             [['views', 'created_by', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 32],
             [['content'], 'string', 'max' => 100],
@@ -67,6 +68,12 @@ class Thread extends \yii\db\ActiveRecord
             ['content', function ($attribute, $params, $validator) {
                 if (Utility::matchURLs($this->$attribute)){
                   $this->addError($attribute, 'Sorry, urls are not allowed in the thread content');
+                }
+              }
+            ],
+            ['testQuestion', function ($attribute, $params, $validator) {
+                if ("four" !== $this->$attribute){
+                  $this->addError($attribute, 'The text of the nice question is not right!');
                 }
               }
             ],
@@ -91,11 +98,12 @@ class Thread extends \yii\db\ActiveRecord
         return [
             'id'      => 'ID',
             'title'   => 'Title',
-            'content' => 'Content',
-            'views'   => 'Views',
-            'created_by' => 'Author ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'testQuestion' => "Dogs have * legs (literal)",
+            'content'     => 'Content',
+            'views'       => 'Views',
+            'created_by'  => 'Author ID',
+            'created_at'  => 'Created At',
+            'updated_at'  => 'Updated At',
         ];
     }
 
