@@ -7,7 +7,7 @@ developing complex Web applications with multiple tiers.
 # yii_test
 ===============================
 
-** A simple Forum and Thread, with **
+## A simple Forum and Thread, with
 
 > Yii2 Advanced template - Better know system for large purpose.
 
