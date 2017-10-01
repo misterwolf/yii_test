@@ -9,7 +9,7 @@ developing complex Web applications with multiple tiers.
 
 ## A simple Forum and Thread, with
 
-> Yii2 Advanced template - Better know system for large purpose.
+> Yii2 Advanced project - Better to know system with large and backend purpose.
 
 > Voting system
 
