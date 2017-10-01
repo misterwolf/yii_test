@@ -6,9 +6,10 @@
 
   $currentUserId = Yii::$app->user->isGuest ? null : Yii::$app->user->identity->id;
   $thread_id = $post->thread_id;
-  $voteForThisPost  = $post->getVote()->count();
+  $voteForThisPost  = $post->getVote()->sum('point');
+
   $postsForThisPost = $post->getThread()->one()->getPost()->count();
-  $currentUserVote  = $post->getVote()->andOnCondition(['thread_id' => $thread_id, 'post_id' => $post->id, 'user_id' => $currentUserId])->one();
+  $currentUserVotes  = $post->getVote()->andOnCondition(['thread_id' => $thread_id, 'post_id' => $post->id, 'user_id' => $currentUserId])->one();
 
 ?>
 
@@ -46,7 +47,7 @@
               <dl>
                 <dd> Joined at: <?= Yii::$app->formatter->asDate($post->author->created_at, 'yyyy-MM-dd'); ?> </dd>
                 <dd> Posts:     <?= $post->author->getPosts()->count() ?> </dd>
-                <dd> Likes:     <?= $post->author->getVotes()->count() ?></dd>
+                <dd> Votes:     <?= $post->author->getVotes()->count() ?></dd>
               </dl>
 
             </section>
@@ -57,15 +58,26 @@
         <div class="row">
           <section class="col-md-8 ">
             <?php
-            $statusUp   = '';
-            $statusDown = '';
-             if ($currentUserVote) {
-               if ($currentUserVote->up) $statusUp = 'not-active';
-               if ($currentUserVote->down) $statusDown   = 'not-active';
-             } ?>
-
-            <a href="<?= Url::to(['threads/'.$thread_id.'/posts/'.$post->id.'/votes/up']); ?>" class="btn btn-primary btn-xs vote-post <?= $statusUp ?>"> Like this post! </a>
-            <a href="<?= Url::to(['threads/'.$thread_id.'/posts/'.$post->id.'/votes/down']); ?>" class="btn btn-danger btn-xs vote-post <?= $statusDown ?>"> Dislike this post!</a>
+              $statusUp   = '';
+              $statusDown = '';
+               if ($currentUserVotes) {
+                 if ($currentUserVotes->point == 1) $statusUp      = 'not-active';
+                 if ($currentUserVotes->point == -1) $statusDown   = 'not-active';
+               }
+               if (!$currentUserId){
+                 $statusUp   = 'not-active';
+                 $statusDown = 'not-active';
+               }
+               ?>
+               <section class="col-md-2" style="font-size: 25px;">
+                 <a href="<?= Url::to(['threads/'.$thread_id.'/posts/'.$post->id.'/votes/up']); ?>" class="glyphicon glyphicon-plus-sign vote-post <?= $statusUp ?>"></a>
+               </section>
+               <section class="col-md-2">
+                 <div style="font-size:25px;" id="post-vote-<?= $post->id ?>"><?= $voteForThisPost ?? 0 // TODO: increment this after voting ?></div>
+               </section>
+               <section class="col-md-2 " style="font-size: 25px;">
+                 <a href="<?= Url::to(['threads/'.$thread_id.'/posts/'.$post->id.'/votes/down']); ?>" class="glyphicon glyphicon-minus-sign vote-post <?= $statusDown ?>"></a>
+               </section>
           </section>
           <section class="col-md-4 text-right ">
             <a href="<?= Url::to(['#']); ?>" class="btn btn-primary btn-xs vote not-active <?= $statusUp ?>"> Reply (TODO) </a>

@@ -27,7 +27,6 @@ class m170929_130028_create_vote_table extends Migration
   			]);
 
         $this->addForeignKey('FK_vote_thread_id', 'vote', 'thread_id', 'thread', 'id', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('FK_vote_post_id',   'vote', 'post_id', 'post', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('FK_vote_user_id',   'vote', 'user_id', 'user', 'id', 'CASCADE', 'CASCADE');
     }
 

@@ -38,13 +38,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php } ?>
 
-
-    <?php
-    $disabled = '';
-     if (Yii::$app->user->isGuest) {
-      $disabled = 'disabled';
-    } ?>
-    <?= Html::a('Create a thread', ['create'], ['class' => 'btn btn-success '.$disabled]) ?>
-    <!-- !COMMON -->
-
 </div>

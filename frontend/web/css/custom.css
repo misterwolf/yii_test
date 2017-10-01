@@ -28,7 +28,8 @@ border-right-0{
 .not-active {
    pointer-events: none;
    cursor: default;
-   background-color: #9e9e9e!important;
+   opacity: .25;
 }
 .panel-default.summary {
-background-color:#0efecd;}
+  background-color:#0efecd;
+}

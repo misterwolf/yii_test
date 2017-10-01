@@ -2,19 +2,18 @@
 return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
+        'defaultRoute' => 'thread/index',
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'request'=>array(
-            'enableCookieValidation'=>true,
-            'enableCsrfValidation'=>true,
-            'cookieValidationKey' => 'some_random_key',
-        ),
+        // 'request'=>array(
+        //     'enableCookieValidation'=>true,
+        //     'enableCsrfValidation'=>true,
+        // ),
         'urlManager' => [
           'showScriptName'  => false,
           'enablePrettyUrl' => true,
           'enableStrictParsing' => false,
-
           'rules' => [
               // threads
               '<controller:(threads)>/create'   => '<controller>/create',

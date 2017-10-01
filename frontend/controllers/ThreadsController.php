@@ -55,18 +55,18 @@ class ThreadsController extends Controller
       // -------------
       // set 1day expiration cookie for keeping info concerning thread view.
       //
-      // Need to change because something is not correct:
-      //  - if user clear cookie
-      //  - if user uses private navigation
+      // Need to change because something is not 100% correct, indeed:
+      //  - if user can clear cookie or private navigation
       //  - it can work good only for guest users.
       //
       // we can't use session:
-      //  - server link to session change is lost whenver browser is closed
+      //  - server link to session change is lost whenever browser is closed
       //  - save a session in db? the same.
       //
       // use IP and save it in DB
-      //  - can be good, but if more users use the same net? no.
+      //  - can be good, but what if more users use the same net? Better no.
       //
+      // TODO: For already singup users:
       // A best implementation is keep in DB who user has viewed a thread/:id
       // if user is not logged or unregistered then use cookie
       //

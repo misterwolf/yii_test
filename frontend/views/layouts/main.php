@@ -99,7 +99,7 @@ AppAsset::register($this);
 $script = <<< JS
 
   $('.vote-thread').on('click', function(event){
-    var buttons = $(this).parent().children();
+    var buttons = $(this).parent().parent().children(); // DAMN RUSH!
     event.preventDefault();
     $.ajax({
         url : $(this).attr('href'),
@@ -107,10 +107,10 @@ $script = <<< JS
         cache : false,
         context:this,
         success : function( data ){
-          console.log(data);
           if (!data.error){
-            buttons.removeClass('not-active');
-            $(this).addClass('not-active');
+            buttons.children().removeClass('not-active'); // TODO: change method for updating class
+            $(this).addClass('not-active');  // TODO: change method for updating class
+            $('#thread-vote-'+data['thread_id']).text(data['points']);
           }
           alert(data.message); // TODO: activate a modal
         }
@@ -126,7 +126,7 @@ $this->registerJs($script);
 $script = <<< JS
 
   $('.vote-post').on('click', function(event){
-    var buttons = $(this).parent().children();
+    var buttons = $(this).parent().parent().children(); // DAMN RUSH!
     event.preventDefault();
     $.ajax({
         url : $(this).attr('href'),
@@ -134,10 +134,10 @@ $script = <<< JS
         cache : false,
         context:this,
         success : function( data ){
-          console.log(data);
           if (!data.error){
-            buttons.removeClass('not-active');
-            $(this).addClass('not-active');
+            buttons.children().removeClass('not-active'); // TODO: change method for updating class
+            $(this).addClass('not-active');  // TODO: change method for updating class
+            $('#post-vote-'+data['post_id']).text(data['points']);
           }
           alert(data.message); // TODO: activate a modal
         }

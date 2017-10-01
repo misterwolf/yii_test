@@ -8,7 +8,7 @@
 
   $summaryVersion     = $summaryVersion ?? false;
   $currentUserId      = Yii::$app->user->isGuest ? null : Yii::$app->user->identity->id;
-  $voteForThisThread  = $thread->getVote()->count();
+  $voteForThisThread  = $thread->getVote()->where(['post_id'=>null])->sum('point');
   $postsForThisThread = $thread->getPost()->count();
   $currentUserVotes   = $thread->getVote()->andOnCondition(['thread_id' => $thread->id, 'user_id' => $currentUserId])->one();
 
@@ -16,7 +16,7 @@
 
 <section class="row clearfix">
     <div class="col-md-12 column">
-      <section class="panel panel-default <?= $summaryVersion ? "summary" : ""?> ">
+      <section class="panel panel-default">
         <section class="panel-heading clearfix">
           <section class="panel-title">
             <section class="col-md-9 column">
@@ -50,7 +50,7 @@
                 <dl>
                   <dd> Joined at: <?= Yii::$app->formatter->asDate($thread->author->created_at, 'yyyy-MM-dd'); ?> </dd>
                   <dd> Posts:     <?= $thread->author->getPosts()->count() ?> </dd>
-                  <dd> Likes:     <?= $thread->author->getVotes()->count() ?> </dd>
+                  <dd> Votes:     <?= $thread->author->getVotes()->count() ?> </dd>
                 </dl>
 
               </section>
@@ -65,18 +65,29 @@
               $statusUp   = '';
               $statusDown = '';
                if ($currentUserVotes) {
-                 if ($currentUserVotes->up) $statusUp = 'not-active';
-                 if ($currentUserVotes->down) $statusDown   = 'not-active';
+                 if ($currentUserVotes->point == 1) $statusUp      = 'not-active';
+                 if ($currentUserVotes->point == -1) $statusDown   = 'not-active';
+               }
+               if (!$currentUserId){
+                 $statusUp   = 'not-active';
+                 $statusDown = 'not-active';
                }
                ?>
-              <a href="<?= Url::to(['threads/'.$thread->id.'/votes/up']); ?>" class="btn btn-primary btn-md vote-thread <?= $statusUp ?>"> Like this thread! </a>
-              <a href="<?= Url::to(['threads/'.$thread->id.'/votes/down']); ?>" class="btn btn-danger btn-md vote-thread <?= $statusDown ?>"> Dislike this thread!</a>
+               <section class="col-md-3" style="font-size: 22px;">
+                 Vote it:
+               </section>
+               <section class="col-md-2" style="font-size: 25px;">
+                 <a href="<?= Url::to(['threads/'.$thread->id.'/votes/up']); ?>" class="glyphicon glyphicon-plus-sign vote-thread <?= $statusUp ?>"></a>
+              </section>
+              <section class="col-md-2">
+                <div style="font-size:25px;" id="thread-vote-<?= $thread->id ?>"><?= $voteForThisThread ?? 0 // TODO: increment this after voting ?></div>
+              </section>
+              <section class="col-md-1 " style="font-size: 25px;">
+                <a href="<?= Url::to(['threads/'.$thread->id.'/votes/down']); ?>" class="glyphicon glyphicon-minus-sign vote-thread <?= $statusDown ?>"></a>
+              </section>
             </section>
-            <section class="col-md-2 ">
-              <h5>Posts: <?= $postsForThisThread; // TODO: increment this after voting ?></h5>
-            </section>
-            <section class="col-md-2 ">
-              <h5>Votes: <?= $voteForThisThread; // TODO: increment this after voting ?></h5>
+            <section class="col-md-3"  style="font-size: 25px;">
+              <h4>Posts: <?= $postsForThisThread; // TODO: increment this after voting ?></h4>
             </section>
             <section class="col-md-3 text-right">
               <?php if (!$summaryVersion) { ?>

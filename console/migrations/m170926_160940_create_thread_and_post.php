@@ -17,7 +17,6 @@ class m170926_160940_create_thread_and_post extends Migration
   				'id'          => $this->primaryKey(),
   				'title'       => $this->string(32)->notNull()->unique(), # can be
   				'content'     => $this->string(100)->notNull(),
-          'views'       => $this->integer()->defaultValue(0),
           'created_by'  => $this->integer()->notNull(),
           'created_at'  => $this->integer()->notNull(),
           'updated_at'  => $this->integer()->notNull()
