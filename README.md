@@ -6,15 +6,25 @@ developing complex Web applications with multiple tiers.
 
 # yii_test
 ===============================
+
 ** A simple Forum and Thread, with **
+
 > Yii2 Advanced template - Better know system for large purpose.
+
 > Voting system
+
 > Some anti-spam features
+
  > Captcha
+
  > Friendly question before post
+
 > Native Login/Sign up
+
 > Active form with modal rendering
+
 > Increasing number of view for thread (TO complete)
+
 
 Components
 -------------------
