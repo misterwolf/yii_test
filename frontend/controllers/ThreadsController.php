@@ -50,9 +50,35 @@ class ThreadsController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id)
-        ]);
+      $thread = $this->findModel($id);
+
+      // -------------
+      // set 1day expiration cookie for keeping info concerning thread view.
+      //
+      // Need to change because something is not correct:
+      //  - if user clear cookie
+      //  - if user uses private navigation
+      //  - it can work good only for guest users.
+      //
+      // we can't use session:
+      //  - server link to session change is lost whenver browser is closed
+      //  - save a session in db? the same.
+      //
+      // use IP and save it in DB
+      //  - can be good, but if more users use the same net? no.
+      //
+      // A best implementation is keep in DB who user has viewed a thread/:id
+      // if user is not logged or unregistered then use cookie
+      //
+      $setCookie = false;
+      if (!$this->getCookieForThreadView($id)){
+        $setCookie = true;
+      }
+      // -------------
+
+      return $this->render('view', [
+          'model' => $thread, 'setCookieForViews' => $setCookie
+      ]);
     }
 
     /**
@@ -118,5 +144,15 @@ class ThreadsController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    /**
+     * Get the cookie for view thread incrementation
+     * @param integer $thread_id
+     * @param integer $value
+     * @return Threads the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function getCookieForThreadView($thread_id){
+      return \Yii::$app->getRequest()->getCookies()->getValue('_tWinc'.$thread_id);
     }
 }

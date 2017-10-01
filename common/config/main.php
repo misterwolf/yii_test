@@ -5,6 +5,11 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'request'=>array(
+            'enableCookieValidation'=>true,
+            'enableCsrfValidation'=>true,
+            'cookieValidationKey' => 'some_random_key',
+        ),
         'urlManager' => [
           'showScriptName'  => false,
           'enablePrettyUrl' => true,

@@ -7,6 +7,21 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model app\models\Threads */
 
+// save cookie for number of visualization
+if($setCookieForViews){
+  // need to save cookie in the view: cookie in the same request won't be saved.
+  $cookie = new \yii\web\Cookie([
+    'name'    => '_tWinc'.$model->id,
+    'value'   => true,
+    'expire'  => time()+60*60*24,
+  ]);
+  \Yii::$app->response->cookies->add($cookie);
+  $model->views += 1;
+  $model->save();
+}
+// ----------------------
+
+
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Threads', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
